@@ -103,6 +103,16 @@ public class PlayerControl : MonoBehaviour {
         }
     }
 
+    void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.layer == 12)
+        {
+            grounded = true;
+            animator.SetBool("Jump", false);
+            doubleJump = false;
+        }
+    }
+
     void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.layer == 12) grounded = false;
