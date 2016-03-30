@@ -50,6 +50,11 @@ public class PlayerControl : MonoBehaviour {
                     doubleJump = true;
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                animator.SetTrigger("Punch");
+            }
         }
 
         if (grounded && noControl) noControl = false;
