@@ -26,13 +26,14 @@ public class PlayerControl : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (bc.IsTouchingLayers())
+        /*if (bc.IsTouchingLayers())
         {
             grounded = true;
+            
             doubleJump = false;
         }
         else grounded = false;
-
+        */
         if (!noControl)
         {
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) move(false);
@@ -66,7 +67,7 @@ public class PlayerControl : MonoBehaviour {
 
     private void jump (float power = jumpPower) {
         rb.velocity = new Vector2(rb.velocity.x, power);
-        animator.SetBool("Walk", false);
+        animator.SetBool("Jump", true);
     }
 
     private void stopMove () {
@@ -87,12 +88,17 @@ public class PlayerControl : MonoBehaviour {
         if (other.gameObject.layer == 11 || other.gameObject.layer == 10) takeHit();
     }
 
-    void OnColliderStay2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.layer == 12) grounded = true;
+        if (other.gameObject.layer == 12)
+        {
+            grounded = true;
+            animator.SetBool("Jump", false);
+            doubleJump = false;
+        }
     }
 
-    void OnColliderExit2D(Collider2D other)
+    void OnCollisionExit2D(Collision2D other)
     {
         if (other.gameObject.layer == 12) grounded = false;
     }
