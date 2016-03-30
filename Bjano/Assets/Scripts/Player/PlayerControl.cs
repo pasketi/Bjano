@@ -10,6 +10,7 @@ public class PlayerControl : MonoBehaviour {
     private bool noControl = false;
     private bool dirRight = true;
     private Vector3 playerScale;
+    private Animator animator;
 
     private const float jumpPower = 15f;
     private const float moveSpeed = 7.5f;
@@ -19,6 +20,7 @@ public class PlayerControl : MonoBehaviour {
         rb = gameObject.GetComponent<Rigidbody2D>();
         bc = gameObject.GetComponent<BoxCollider2D>();
         playerScale = gameObject.transform.localScale;
+        animator = gameObject.GetComponent<Animator>();
 	}
 
     // Update is called once per frame
@@ -49,7 +51,7 @@ public class PlayerControl : MonoBehaviour {
             }
         }
 
-        if (grounded && !noControl) noControl = false;
+        if (grounded && noControl) noControl = false;
 	}
 
     // Movement functions
@@ -58,19 +60,24 @@ public class PlayerControl : MonoBehaviour {
         dirRight = right;
         rb.velocity = new Vector2(right ? speed : -speed, rb.velocity.y);
         gameObject.transform.localScale = new Vector3(dirRight ? playerScale.x : -playerScale.x, playerScale.y, playerScale.z);
+        if (grounded) animator.SetBool("Walk", true);
+        else animator.SetBool("Walk", false);
     }
 
     private void jump (float power = jumpPower) {
         rb.velocity = new Vector2(rb.velocity.x, power);
+        animator.SetBool("Walk", false);
     }
 
     private void stopMove () {
         rb.velocity = new Vector2(0f, rb.velocity.y);
+        animator.SetBool("Walk", false);
     }
 
     private void takeHit ()
     {
         rb.velocity = new Vector2((dirRight ? -moveSpeed : moveSpeed) / 2f , jumpPower / 2f);
+        animator.SetBool("Walk", false);
         noControl = true;
         grounded = false;
     }
@@ -78,5 +85,15 @@ public class PlayerControl : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.layer == 11 || other.gameObject.layer == 10) takeHit();
+    }
+
+    void OnColliderStay2D(Collider2D other)
+    {
+        if (other.gameObject.layer == 12) grounded = true;
+    }
+
+    void OnColliderExit2D(Collider2D other)
+    {
+        if (other.gameObject.layer == 12) grounded = false;
     }
 }
