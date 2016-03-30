@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == 8 || other.gameObject.layer == 9) takeHit();
+        if (other.gameObject.layer == 9) takeHit();
     }
 
     void OnCollisionEnter2D(Collision2D other)

@@ -90,7 +90,7 @@ public class PlayerControl : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == 11 || other.gameObject.layer == 10) takeHit();
+        if (other.gameObject.layer == 11) takeHit();
     }
 
     void OnCollisionEnter2D(Collision2D other)
